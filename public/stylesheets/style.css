@@ -4,7 +4,6 @@
 }
 
 body {
-  padding: 50px;
   font: 14px "Minecraftia", sans-serif;
 }
 
@@ -14,7 +13,7 @@ a {
 }
 
 .chatlog {
-  height: 400px;
+  height: 60vh;
   overflow-y: scroll;
   background-color: black;
   color: white;
@@ -34,6 +33,11 @@ p {
   margin: 0 0 5px 0;
   padding: 0;
   font-size: 14px;
+}
+
+.chatlog img {
+  height: 300px;
+  width: auto;
 }
 
 .chatlog h2 {
@@ -61,4 +65,10 @@ p {
 .inputform {
   display: flex;
   flex-direction: row;
+}
+
+@media screen and (min-width: 700px) {
+  body {
+    padding: 50px;
+  }
 }

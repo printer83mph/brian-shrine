@@ -1,7 +1,14 @@
 (function () {
 
+    var imgFormats = ["png", "jpg", "gif"];
+
     var chatLog, message, sendButton;
     var socket = io();
+
+    function isUrl(s) {
+        var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+        return regexp.test(s);
+    }
 
     function createMessage(user, message) {
         var out = document.createElement("li");
@@ -10,9 +17,18 @@
             name.innerHTML = user;
             out.appendChild(name);
         }
-        let msg = document.createElement("p");
-        msg.innerHTML = message;
-        out.appendChild(msg);
+        if (isUrl(message) && imgFormats.indexOf(message.substr(message.length-3)) != 0) {
+            let container = document.createElement("a");
+            container.href = message;
+            let img = document.createElement("img");
+            img.src = message;
+            container.appendChild(img);
+            out.appendChild(container);
+        } else {
+            let msg = document.createElement("p");
+            msg.innerHTML = message;
+            out.appendChild(msg);
+        }
         return out;
     }
 
