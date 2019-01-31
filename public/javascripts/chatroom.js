@@ -17,7 +17,7 @@
             name.innerHTML = user;
             out.appendChild(name);
         }
-        if (isUrl(message) && imgFormats.indexOf(message.substr(message.length-3)) != 0) {
+        if (isUrl(message) && imgFormats.indexOf(message.substr(message.length-3)) != -1) {
             let container = document.createElement("a");
             container.href = message;
             let img = document.createElement("img");
