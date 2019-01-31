@@ -41,7 +41,9 @@ io.on('connection', function (socket) {
     io.emit('chat message', null, `${nam} has joined Brian Chat`);
   });
   socket.on('chat message', function (msg) {
-    io.emit('chat message', users[socket.id], msg);
+    if (msg) {
+      io.emit('chat message', users[socket.id], msg);
+    }
   });
   socket.on('disconnect', function() {
     io.emit('chat message', null, `${users[socket.id]} has disconnected`);
