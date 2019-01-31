@@ -1,10 +1,16 @@
+@font-face {
+  font-family: "Minecraftia";
+  src: url("/stylesheets/fonts/Minecraftia.ttf");
+}
+
 body {
   padding: 50px;
-  font: 14px "Times New Roman", serif;
+  font: 14px "Minecraftia", sans-serif;
 }
 
 a {
-  color: #00B7FF;
+  color: blue;
+  text-decoration: none;
 }
 
 .chatlog {
@@ -19,15 +25,40 @@ a {
 .chatlog li {
   list-style-type: none;
   border-bottom: 1px solid gray;
+  padding: 5px 0 5px 10px;
 }
 
-.chatlog h2, p {
+.chatlog h2,
+p {
   display: inline-block;
-  margin: 10px;
+  margin: 0 0 5px 0;
   padding: 0;
-  font-size: 12px;
+  font-size: 14px;
+}
+
+.chatlog h2 {
+  margin-right: 5px;
 }
 
 .chatlog li:last-child {
   border-bottom: none;
+}
+
+.msg, .send {
+  font-family: inherit;
+}
+
+.msg {
+  flex-grow: 1;
+}
+
+.send {
+  border: none;
+  background-color: black;
+  color: white;
+}
+
+.inputform {
+  display: flex;
+  flex-direction: row;
 }

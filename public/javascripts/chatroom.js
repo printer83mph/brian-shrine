@@ -26,7 +26,7 @@
         socket.emit("name", name);
 
         socket.on('name', function(name) {
-            document.getElementById("name").innerHTML = name;
+            document.getElementById("name").innerHTML = `Logged in as ${name}`;
         });
 
         sendButton.onclick = function (e) {
