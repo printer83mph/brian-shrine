@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="description" content="Cool Brian Site">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/javascripts/chatroom.js"></script>
+</head>
+
+<body>
+    <ul id="chatlog" class="chatlog"></ul>
+    <form action="">
+        logged in as <span id="name">anon</span> <input id="message" autocomplete="off" /> <button id="send">Send</button>
+    </form>
+    <a href="/">Return to homepage</a>
+</body>
+
+</html>
