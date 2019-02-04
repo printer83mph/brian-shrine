@@ -22,6 +22,8 @@ a {
 }
 
 .chatlog li {
+  display: flex;
+  flex-direction: row;
   list-style-type: none;
   border-bottom: 1px solid gray;
   padding: 5px 0 5px 10px;
@@ -36,8 +38,9 @@ p {
 }
 
 .chatlog img {
-  height: 300px;
+  max-height: 300px;
   width: auto;
+  display: block;
 }
 
 .chatlog h2 {

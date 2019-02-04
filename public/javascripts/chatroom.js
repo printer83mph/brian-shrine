@@ -1,34 +1,32 @@
 (function () {
 
-    var imgFormats = ["png", "jpg", "gif"];
-
     var chatLog, message, sendButton;
     var socket = io();
 
-    function isUrl(s) {
-        var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
-        return regexp.test(s);
-    }
-
-    function createMessage(user, message) {
+    function createMessage(user, message, url) {
         var out = document.createElement("li");
+        
+        // username
         if (user) {
             let name = document.createElement("h2");
-            name.innerHTML = user;
+            name.innerHTML = user + ": ";
             out.appendChild(name);
         }
-        if (isUrl(message) && imgFormats.indexOf(message.substr(message.length-3)) != -1) {
-            let container = document.createElement("a");
-            container.href = message;
-            let img = document.createElement("img");
-            img.src = message;
-            container.appendChild(img);
-            out.appendChild(container);
-        } else {
+        
+        // TODO: check if url (ANCHORME)
+        // container.target = "_blank";
+        if (message) {
             let msg = document.createElement("p");
             msg.innerHTML = message;
             out.appendChild(msg);
         }
+
+        if (url) {
+            let img = document.createElement("img");
+            img.src = imageURL;
+            out.appendChild(img);
+        }
+
         return out;
     }
 
@@ -52,12 +50,12 @@
             return false;
         };
 
-        socket.on('chat message', function (user, msg) {
-            chatLog.appendChild(createMessage(user, msg));
+        socket.on('chat message', function (user, msg, url) {
+            chatLog.appendChild(createMessage(user, msg, url));
             chatLog.scrollTop = chatLog.scrollHeight;
         });
 
-
+        // NEED A BROADCAST FUNCTION
 
     }
 

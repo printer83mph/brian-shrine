@@ -1,5 +1,6 @@
 var express = require('express');
 var socket_io = require('socket.io');
+var imgurUploader = require('imgur-uploader');
 var router = express.Router();
 
 var io = socket_io();
@@ -40,17 +41,21 @@ io.on('connection', function (socket) {
     socket.emit('name', users[socket.id]);
     io.emit('chat message', null, `${nam} has joined Brian Chat`);
   });
-  socket.on('chat message', function (msg) {
-    if (msg) {
-      io.emit('chat message', users[socket.id], msg);
+
+  socket.on('chat message', function (msg, img) {
+    if (img) {
+      // TODO: make imgUrl into imgur upload url
+      var imgUrl = imgurUploader(  );
     }
+    io.emit('chat message', users[socket.id], (msg.trim() === "" ? null : msg.trim()), imgUrl);
   });
+
   socket.on('disconnect', function() {
     io.emit('chat message', null, `${users[socket.id]} has disconnected`);
     users[socket.id] = null;
   });
 });
 
-router.io = io
+router.io = io;
 
 module.exports = router;
