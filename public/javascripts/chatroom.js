@@ -35,25 +35,34 @@
         message = document.getElementById("message");
         sendButton = document.getElementById("send");
 
-        let name = prompt("Enter your name") || "anon";
+        function clearChat() {
+            while(chatLog.firstChild) {
+                chatLog.removeChild(chatLog.firstChild);
+            }
+        }
 
-        socket.emit("name", name);
+        chatLog.appendChild(createMessage(null, "Enter your name to begin"));
 
         socket.on('name', function(name) {
+            clearChat();
+            message.value = "";
             document.getElementById("name").innerHTML = `Logged in as ${name}`;
+            socket.on('chat message', function (user, msg, url) {
+                chatLog.appendChild(createMessage(user, msg, url));
+                chatLog.scrollTop = chatLog.scrollHeight;
+            });
+            sendButton.onclick = function(e) {
+                e.preventDefault();
+                socket.emit("chat message", message.value);
+                message.value = "";
+            };
         });
 
         sendButton.onclick = function (e) {
-            e.preventDefault;
-            socket.emit("chat message", message.value);
-            message.value = "";
+            e.preventDefault();
+            socket.emit("name", message.value);
             return false;
         };
-
-        socket.on('chat message', function (user, msg, url) {
-            chatLog.appendChild(createMessage(user, msg, url));
-            chatLog.scrollTop = chatLog.scrollHeight;
-        });
 
         // NEED A BROADCAST FUNCTION
 
