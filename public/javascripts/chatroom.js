@@ -1,6 +1,6 @@
 (function () {
 
-    var chatLog, message, sendButton;
+    var chatLog, message, sendButton, fileInputButton, fileInputText, file;
     var socket = io();
 
     function createMessage(user, message, url) {
@@ -23,7 +23,7 @@
 
         if (url) {
             let img = document.createElement("img");
-            img.src = imageURL;
+            img.src = url;
             out.appendChild(img);
         }
 
@@ -34,12 +34,26 @@
         chatLog = document.getElementById("chatlog");
         message = document.getElementById("message");
         sendButton = document.getElementById("send");
+			  fileInputButton = document.getElementById("fileInput");
+			  fileInputText = document.getElementById("fileInputText");
 
         function clearChat() {
             while(chatLog.firstChild) {
                 chatLog.removeChild(chatLog.firstChild);
             }
         }
+
+			  function uploadImage(message, file) {
+				    let reader = new FileReader();
+
+				    reader.onloadend = function() {
+				    	  let data = reader.result;
+				    	  data = data.slice(data.indexOf(',') + 1);
+				    	  socket.emit('chat message', message, data);
+				    };
+
+				    reader.readAsDataURL(file);
+			  }
 
         chatLog.appendChild(createMessage(null, "Enter your name to begin"));
 
@@ -53,10 +67,25 @@
             });
             sendButton.onclick = function(e) {
                 e.preventDefault();
-                socket.emit("chat message", message.value);
-                message.value = "";
+
+                if (file) {
+                    uploadImage(message.value, file);
+                } else {
+                    socket.emit('chat message', message.value);
+                }
+                message.value = '';
+
+                fileInputButton.value = null;
+                fileInputText.innerText = "Upload Image";
+
+                return false;
             };
         });
+
+        fileInputButton.onchange = function(e) {
+            file = this.files[0];
+            fileInputText.innerText = file.name;
+        };
 
         sendButton.onclick = function (e) {
             e.preventDefault();

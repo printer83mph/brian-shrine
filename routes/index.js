@@ -1,6 +1,6 @@
 var express = require('express');
 var socket_io = require('socket.io');
-var imgurUploader = require('imgur-uploader');
+var imgur = require('imgur');
 var router = express.Router();
 
 var io = socket_io();
@@ -44,10 +44,16 @@ io.on('connection', function (socket) {
 
   socket.on('chat message', function (msg, img) {
     if (img) {
-      // TODO: make imgUrl into imgur upload url
-      var imgUrl = imgurUploader(  );
+			imgur.uploadBase64(img)
+				.then(function (json) {
+					io.emit('chat message', users[socket.id], (msg.trim() === "" ? null : msg.trim()), json.data.link);
+				})
+				.catch(function (err) {
+					io.emit('chat message', users[socket.id], (msg.trim() === "" ? null : msg.trim()) + ' - [failed image upload]');
+				});
+    } else {
+			io.emit('chat message', users[socket.id], (msg.trim() === "" ? null : msg.trim()));
     }
-    io.emit('chat message', users[socket.id], (msg.trim() === "" ? null : msg.trim()), imgUrl);
   });
 
   socket.on('disconnect', function() {

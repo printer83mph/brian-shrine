@@ -17,7 +17,12 @@
 <body>
     <ul id="chatlog" class="chatlog"></ul>
     <form action="" class="inputform">
-        <input id="message" class="msg" autocomplete="off" /> <button id="send" class="send">Send</button>
+        <input id="message" class="msg" autocomplete="off" />
+        <label id="fileInputLabel" class="fileContainer">
+            <p id="fileInputText">Upload Image</p>
+            <input id="fileInput" class="img" type="file" accept="image/*" />
+        </label>
+        <button id="send" class="send">Send</button>
     </form>
     <div id="name" class="name"></div>
     <nav>
