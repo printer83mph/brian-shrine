@@ -5,14 +5,14 @@
 
     function createMessage(user, message, url) {
         var out = document.createElement("li");
-        
+
         // username
         if (user) {
             let name = document.createElement("h2");
             name.innerHTML = user + ": ";
             out.appendChild(name);
         }
-        
+
         // TODO: check if url (ANCHORME)
         // container.target = "_blank";
         if (message) {
@@ -40,26 +40,26 @@
         message.focus();
 
         function clearChat() {
-            while(chatLog.firstChild) {
+            while (chatLog.firstChild) {
                 chatLog.removeChild(chatLog.firstChild);
             }
         }
 
-			  function uploadImage(message, file) {
-				    let reader = new FileReader();
+        function uploadImage(file, callback) {
+            let reader = new FileReader();
 
-				    reader.onloadend = function() {
-				    	  let data = reader.result;
-				    	  data = data.slice(data.indexOf(',') + 1);
-				    	  socket.emit('chat message', message, data);
-				    };
+            reader.onloadend = function () {
+                let data = reader.result;
+                data = data.slice(data.indexOf(',') + 1);
+                callback(data);
+            };
 
-				    reader.readAsDataURL(file);
-			  }
+            reader.readAsDataURL(file);
+        }
 
         chatLog.appendChild(createMessage(null, "Enter your name to begin"));
 
-        socket.on('name', function(name) {
+        socket.on('name', function (name) {
             clearChat();
             message.value = "";
             document.getElementById("name").innerHTML = `Logged in as ${name}`;
@@ -67,13 +67,17 @@
                 chatLog.appendChild(createMessage(user, msg, url));
                 chatLog.scrollTop = chatLog.scrollHeight;
             });
-            sendButton.onclick = function(e) {
+            sendButton.onclick = function (e) {
                 e.preventDefault();
 
+                var msg = (message.value.trim() == "" ? null : message.value.trim());
+
                 if (file) {
-                    uploadImage(message.value, file);
-                } else {
-                    socket.emit('chat message', message.value);
+                    uploadImage(file, function(data) {
+                        socket.emit('chat message', msg, data);
+                    });
+                } else if(msg) {
+                    socket.emit('chat message', msg);
                 }
                 message.value = '';
 
@@ -85,14 +89,19 @@
             };
         });
 
-        fileInputButton.onchange = function(e) {
+        fileInputButton.onchange = function (e) {
             file = this.files[0];
             fileInputText.innerText = file.name;
         };
 
         sendButton.onclick = function (e) {
             e.preventDefault();
-            socket.emit("name", message.value);
+            if (message.value.trim() != "") {
+                socket.emit("name", message.value);
+            } else {
+                chatLog.appendChild(createMessage(null, "Please enter a valid name."))
+            }
+            message.value = "";
             return false;
         };
 

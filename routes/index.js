@@ -46,13 +46,13 @@ io.on('connection', function (socket) {
     if (img) {
 			imgur.uploadBase64(img)
 				.then(function (json) {
-					io.emit('chat message', users[socket.id], (msg.trim() === "" ? null : msg.trim()), json.data.link);
+					io.emit('chat message', users[socket.id], msg, json.data.link);
 				})
 				.catch(function (err) {
-					io.emit('chat message', users[socket.id], (msg.trim() === "" ? null : msg.trim()) + ' - [failed image upload]');
+					io.emit('chat message', users[socket.id], (msg) + ' - [failed image upload]');
 				});
     } else {
-			io.emit('chat message', users[socket.id], (msg.trim() === "" ? null : msg.trim()));
+			io.emit('chat message', users[socket.id], (msg));
     }
   });
 
