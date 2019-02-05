@@ -34,8 +34,10 @@
         chatLog = document.getElementById("chatlog");
         message = document.getElementById("message");
         sendButton = document.getElementById("send");
-			  fileInputButton = document.getElementById("fileInput");
-			  fileInputText = document.getElementById("fileInputText");
+        fileInputButton = document.getElementById("fileInput");
+        fileInputText = document.getElementById("fileInputText");
+
+        message.focus();
 
         function clearChat() {
             while(chatLog.firstChild) {
@@ -76,6 +78,7 @@
                 message.value = '';
 
                 fileInputButton.value = null;
+                file = null;
                 fileInputText.innerText = "Upload Image";
 
                 return false;
