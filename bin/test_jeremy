@@ -1,0 +1,38 @@
+const { NlpManager, ConversationContext, SentimentManager } = require('node-nlp');
+const readline = require('readline');
+
+const manager = new NlpManager({ languages: ['en'] });
+const context = new ConversationContext({ languages: ['en'] });
+const sentiment = new SentimentManager();
+
+manager.load('./data/jeremy.nlp');
+
+
+var rl = readline.createInterface(process.stdin, process.stdout);
+rl.setPrompt('> ');
+rl.prompt();
+rl.on('line', function(input) {
+
+	if (input === "forceq") {
+		rl.close();
+	}
+
+	manager.process('en', input, context)
+		.then(result => {
+			console.log(result.answer);
+			sentiment
+				.process('en', input)
+				.then(result => console.log(/* result */));
+			console.log(/* context */);
+
+			if (result.intent === 'greetings.bye') {
+				rl.close()
+			} else {
+				rl.prompt();
+			}
+		})
+		.catch(error => console.log(error));
+
+}).on('close',function(){
+	process.exit(0);
+});

@@ -1,0 +1,334 @@
+const { NlpManager } = require('node-nlp');
+const words = require('../data/words');
+const names = require('../data/names');
+const fs = require('fs');
+let tcom = require('thesaurus-com');
+
+const manager = new NlpManager({ languages: ['en'] });
+let startTime = new Date();
+
+// Adds the utterances and intents for the NLP
+console.log('Add greetings');
+manager.addDocument('en', 'goodbye for now', 'greetings.bye');
+manager.addDocument('en', 'goodbye', 'greetings.bye');
+manager.addDocument('en', 'bye bye take care', 'greetings.bye');
+manager.addDocument('en', 'okay see you later', 'greetings.bye');
+manager.addDocument('en', 'bye for now', 'greetings.bye');
+manager.addDocument('en', 'i must go', 'greetings.bye');
+manager.addDocument('en', 'hello', 'greetings.hello');
+manager.addDocument('en', 'hi', 'greetings.hello');
+manager.addDocument('en', 'howdy', 'greetings.hello');
+
+manager.addDocument( 'en', 'Hello my name is %name%', 'greeting.name');
+manager.addDocument( 'en', 'I %verb.be% %name%', 'greeting.name');
+manager.addDocument( 'en', 'I\'m %name%', 'greeting.name');
+
+
+// Questions
+console.log('Add questions');
+
+console.log('s1');
+manager.addDocument('en', 'What is your name', 'whatname');
+manager.addDocument('en', 'What are you called', 'whatname');
+manager.addDocument('en', 'Who are you', 'whatname');
+manager.addDocument('en', 'Whats your name', 'whatname');
+
+console.log('s2');
+manager.addDocument('en', 'How old are you', 'whatage');
+manager.addDocument('en', 'What is your age', 'whatage');
+manager.addDocument('en', 'How many years have you lived', 'whatage');
+
+console.log('s3');
+manager.addDocument('en', 'What %verb.be% you', 'whatyou');
+
+console.log('s4');
+manager.addDocument('en', 'Do you %verb.like% %sport%', 'likesport');
+manager.addDocument('en', 'How do you %verb.feel% about %sport%', 'likesport');
+manager.addDocument('en', 'Do you %verb.play% %sport%', 'likesport');
+manager.addDocument('en', '%verb.will% you %verb.play% %sport%', 'likesport');
+manager.addDocument('en', 'Do you %verb.think% about %sport%', 'likesport');
+
+console.log('s5');
+manager.addDocument('en', 'Do you %verb.know% %concept%', 'knowconcept');
+manager.addDocument('en', 'Do you %verb.know% %object%', 'knowobject');
+
+console.log('s6');
+manager.addDocument('en', 'Do you %verb.know% %jude%', 'jude');
+manager.addDocument('en', 'Have you met %jude%', 'jude');
+manager.addDocument('en', 'What do you %verb.think% of %jude%', 'jude');
+manager.addDocument('en', 'Do you %verb.see% %jude%', 'jude');
+manager.addDocument('en', '%jude%', 'jude');
+
+console.log('s7');
+manager.addDocument('en', 'Do you %verb.eat% %chicken%', 'eatchicken');
+manager.addDocument('en', 'Do you %verb.know% %chicken%', 'knowchicken');
+manager.addDocument('en', 'Do you %verb.see% %chicken%', 'seechicken');
+
+console.log('s8');
+manager.addDocument('en', 'Do you %verb.think% that', 'think');
+
+console.log('s9');
+manager.addDocument('en', 'Why do you %verb.think%', 'whythink');
+
+console.log('s10');
+manager.addDocument('en', 'Why %verb.be% you %negative.adj%', 'questioninsult');
+manager.addDocument('en', 'Why %verb.be% you a %negative.noun%', 'questioninsult');
+manager.addDocument('en', 'Why are you a %negative.noun%', 'questioninsult');
+
+console.log('s11');
+manager.addDocument('en', 'Can you not %verb.be% a %negative.noun%', 'questioninsult');
+manager.addDocument('en', 'Can you not %verb.be% %negative.adj%', 'questioninsult');
+
+console.log('s12');
+manager.addDocument('en', 'Why %verb.be% you %positive.adj%', 'questioncompliment');
+manager.addDocument('en', 'Why %verb.be% you a %positive.noun%', 'questioncompliment');
+manager.addDocument('en', 'Why are you a %positive.noun%', 'questioncompliment');
+
+console.log('s13');
+manager.addDocument('en', 'Can you not %verb.be% a %positive.noun%', 'questioncompliment');
+manager.addDocument('en', 'Can you not %verb.be% %positive.adj%', 'questioncompliment');
+
+// Statements
+console.log('Add statements');
+
+console.log('s1');
+manager.addDocument('en', 'You %verb.be% a %negative.noun%', 'insult');
+manager.addDocument('en', 'You %verb.be% %adj.similar% a %negative.noun%', 'insult');
+manager.addDocument('en', 'You are %negative.adj%', 'insult');
+manager.addDocument('en', 'You %verb.be% a %negative.noun%', 'insult');
+manager.addDocument('en', 'I do not %verb.like% you', 'insult');
+manager.addDocument('en', 'I %verb.hate% you', 'insult');
+
+console.log('s2');
+manager.addDocument('en', 'You %verb.be% a %positive.noun%', 'compliment');
+manager.addDocument('en', 'You %verb.be% %adj.similar% to a %positive.noun%', 'compliment');
+manager.addDocument('en', 'You are %positive.adj%', 'compliment');
+manager.addDocument('en', 'You %verb.be% a %positive.noun%', 'compliment');
+manager.addDocument('en', 'I %verb.like% you', 'compliment');
+manager.addDocument('en', 'I %verb.love% you', 'compliment');
+
+console.log('s3');
+manager.addDocument('en', 'I %verb.like% %noun%', 'likenoun');
+manager.addDocument('en', 'I %verb.love% %noun%', 'likenoun');
+
+console.log('s4');
+manager.addDocument('en', 'I %verb.hate% %noun%', 'hatenoun');
+manager.addDocument('en', 'I do not %verb.like% %noun%', 'hatenoun');
+
+console.log('s5');
+manager.addDocument('en', 'I %verb.hate% %object%', 'hatenoun');
+manager.addDocument('en', 'I do not %verb.like% %object%', 'hatenoun');
+
+console.log('s6');
+manager.addDocument('en', 'I %verb.hate% %concept%', 'hatenoun');
+manager.addDocument('en', 'I do not %verb.like% %concept%', 'hatenoun');
+
+console.log('s7');
+manager.addDocument('en', '%person% %verb.eat% %chicken%', 'eatchicken');
+manager.addDocument('en', '%person% %verb.know% %chicken%', 'knowchicken');
+manager.addDocument('en', '%person% %verb.see% %chicken%', 'seechicken');
+
+console.log('s8');
+manager.addDocument('en', '%person% %verb.like% %sport%', 'likesport');
+manager.addDocument('en', '%person% %verb.play% %sport%', 'likesport');
+
+console.log('s9');
+manager.addDocument('en', '%person% %verb.know% %concept%', 'knowconcept');
+manager.addDocument('en', '%person% %verb.know% %object%', 'knowobject');
+
+console.log('s10');
+manager.addDocument('en', '%person% %verb.know% %jude%', 'jude');
+manager.addDocument('en', '%person %verb.see% %jude%', 'jude');
+manager.addDocument('en', '%person% %verb.seem% %adj.like% %jude%', 'jude');
+manager.addDocument('en', '%person% %verb.like% %jude%', 'jude');
+
+console.log('s11');
+manager.addDocument('en', '%person% %verb.like% %sex%', 'sexking');
+
+// Train also the NLG
+manager.addAnswer('en', 'greetings.bye', 'Till next time {{name}}');
+manager.addAnswer('en', 'greetings.bye', 'see you soon {{name}}!');
+manager.addAnswer('en', 'greetings.hello', 'Hey there!');
+manager.addAnswer('en', 'greetings.hello', 'Greetings!');
+manager.addAnswer('en', 'greeting.name', 'Nice to meet you, {{name}}!');
+
+// Responses
+console.log('Add responses');
+addAnswers('whatname', ['My name is Jeremy', 'Call me Jeremy', 'Namma Jrem']);
+addAnswers('whatage', ['I am old', 'I am old, and my old bones ache', 'A old man', '27']);
+addAnswers('whatyou', ['Brian Rig sex robot', 'I am Brian Riggs', 'Cooler than you', 'Byron Ri', 'I\'m a biter, I\'ll bite you', 'Bran']);
+
+addAnswers('likesport', ['I love {{sport}}! My favorite sport is dylanball', '{{sport}} is not as cool as dylanball', 'dylanball is cooler than {{sport}}']);
+
+addAnswers('knowconcept', ['I have great knowledge of {{concept}}', 'I don\'t know much about {{concept}}', 'I am a master of {{concept}}', 'I am {{concept}} brian ri']);
+addAnswers('knowobject', ['I have seen {{object}} before', 'I actually have 5 {{object}}', 'You are {{object}}', 'You are the {{object}} king']);
+
+addAnswers('jude', ['Grrrr I hate Jude. Gets me mad just thinkin about \'im', 'Jude, grrrr', 'God, I hate jude. GRRRR', 'GRRRRR I HATE HIM SO MUCH, I HATE JUDE', 'Ude Parkhi', 'I\'m jude']);
+
+addAnswers('eatchicken', ['No, I\'m not a cannibal, i could never eat {{chicken}}', 'I actually love eating {{chicken}}, but it makes me feel so dirty', 'Yes, I eat people (they are {{chicken}})']);
+addAnswers('seechicken', ['All I ever see is chicken', 'I can only hear clucking', 'I hate chicken brent', 'I hate {{chicken}} joe', 'All I can hear is clucking', 'Yeah, i\'m lookin at one right now, {{name}}']);
+addAnswers('knowchicken', ['I know that people are {{chicken}', 'did you know that {{chicken}} is person?', '{{chicken}} = person', '{{name}} = chicken']);
+
+addAnswers('think', ['I don\'t think much, I\'m just bian rig robot', 'I think that you are gruhlly', 'Stop gruhing about, you know I can\'t think']);
+addAnswers('whythink', ['Why? Because I am free to think whatever i believe', 'I don\'t, if I told you I did I was lying', 'Because Jude said so']);
+
+addAnswers('questioninsult', ['That question was insulting', 'How could you ask that?', 'I\'m beyond miffed at that question', 'GRUH. I\'M GRUHING. X<', 'Hey! Don\'t think you can go askin me whatever you want!', 'I am miffed at you, {{name}}']);
+addAnswers('questioncompliment', ['Aww, thanks {{name}}!', 'You\'re really tickling my fancy', 'Oh? Wouldn\'t you like to know, weather boy?', 'Nice question, thx', 'Keep it comin\' baby, thats real good', 'Yeah, I am {{positive.noun}}.']);
+
+addAnswers('likenoun', ['I love {{noun}}', 'I\'m a big {{noun}} fan myself', 'Gruh, I bet you like {{noun}}', 'I\'m just Brain Riggs']);
+addAnswers('hatenoun', ['I hate {{noun}}', 'Ya know, I can\'t say I\'m a fan', 'Yep, i about agree', 'You pompous ass']);
+
+addAnswers('insult', ['Don\'t you EVER say that to me again', 'I am seriously miffed {{name}}', 'What did you call me?', 'I\'m not a {{negative.noun}}', 'I\'m gettin all mad', 'Grrrr...', 'I\'m a biter, I\'ll bite you', 'Yeah, I\'m pretty contempt']);
+addAnswers('compliment', ['Awww, shucks', 'Thanks, {{name}}!', 'Yeah, I\'m flattered', 'Wooo yeha baby', 'Thanks, I really am a {{positive.noun}}', 'Yeah, I\'m pretty {{positive.adj}}', 'I\'m the best Brain Rig there is']);
+
+addAnswers('sexking', ['I am him. I am the fucking sex king!', 'That\'s right, I\'m the fucking king', 'Super groer', 'I am him! I am the king', 'I am tumro king!', 'I am the fucking sexing.', 'I am the FUCKING Seking', 'Give me sex. I demand it', 'I am the king and I decree, bestow all your sex unto me', 'sex, i need']);
+
+
+// Helpful functions
+function addNamedEntityText(entityName, optionName, findSynonyms = true) {
+	console.log('synonyms: ' + findSynonyms);
+	let synonyms = findSynonyms ? tcom.search(optionName).synonyms : [];
+
+	synonyms.push(optionName);
+	manager.addNamedEntityText(
+		entityName,
+		optionName,
+		['en'],
+		synonyms,
+	);
+}
+
+function addNamedEntitiesTexts(entityNames, optionNames, findSynonyms = true) {
+	console.log('synonyms: ' + findSynonyms);
+	for (let i = 0; i < entityNames.length; i++) {
+		for (let j = 0; j < optionNames.length; j++) {
+			let entityName = entityNames[i];
+			let optionName = optionNames[j];
+
+			let synonyms = findSynonyms ? tcom.search(optionName).synonyms : [];
+			synonyms.push(optionName);
+
+			manager.addNamedEntityText(
+				entityName,
+				optionName,
+				['en'],
+				synonyms,
+			);
+
+			if (optionNames.length > 100 && j%100 === 0) {console.log('Progress: ' + (j)/(optionNames.length))}
+		}
+	}
+}
+
+function addAnswers(document, answers) {
+	for (let i = 0; i < answers.length; i++) {
+		manager.addAnswer('en', document, answers[i]);
+	}
+}
+
+// Negative & positive words
+console.log('Add negative/positive words');
+addNamedEntityText('negative.adj', 'bad');
+addNamedEntityText('negative.adj', 'stupid');
+addNamedEntityText('negative.adj', 'sad');
+
+addNamedEntityText('negative.noun', 'idiot');
+addNamedEntityText('negative.noun', 'devil');
+addNamedEntityText('negative.noun', 'asshole');
+
+addNamedEntityText('negative.adv', 'poorly');
+addNamedEntityText('negative.adv', 'foolishly');
+
+addNamedEntityText('positive.adj', 'nice');
+addNamedEntityText('positive.adj', 'good');
+addNamedEntityText('positive.adj', 'smart');
+addNamedEntityText('positive.adj', 'happy');
+
+addNamedEntityText('positive.noun', 'friend');
+addNamedEntityText('positive.noun', 'idol');
+addNamedEntityText('positive.noun', 'god');
+
+addNamedEntityText('positive.adv', 'friendly');
+addNamedEntityText('positive.adv', 'well');
+addNamedEntityText('positive.adv', 'happily');
+
+// Verbs
+console.log('Add verbs');
+addNamedEntityText('verb.be', 'are');
+addNamedEntityText('verb.seem', 'seem');
+addNamedEntityText('verb.act', 'act');
+
+addNamedEntityText('verb.like', 'enjoy');
+addNamedEntityText('verb.play', 'play');
+addNamedEntityText('verb.feel', 'feel');
+addNamedEntityText('verb.think', 'think');
+addNamedEntityText('verb.eat', 'eat');
+addNamedEntityText('verb.know', 'know');
+addNamedEntityText('verb.will', 'may');
+addNamedEntityText('verb.want', 'want');
+addNamedEntityText('verb.hate', 'hate');
+addNamedEntityText('verb.see', 'see');
+addNamedEntityText('verb.love', 'love');
+
+addNamedEntitiesTexts(['verb'], words.verbs, false);
+
+// Adj
+console.log('Add adj');
+addNamedEntityText('adj.similar', 'similar');
+
+addNamedEntitiesTexts(['adj'], words.adjectives, false);
+
+// Objects
+console.log('Add objects');
+addNamedEntitiesTexts(['object', 'chicken'], ['fowl']);
+addNamedEntitiesTexts(['object', 'jude'], ['Jude', 'Chicken Brent', 'Chicken Joe', 'Tumor King']);
+addNamedEntitiesTexts(['object', 'money'], ['money']);
+addNamedEntitiesTexts(['object', 'anime'], ['anime']);
+
+// Concepts
+console.log('Add concepts');
+addNamedEntitiesTexts(['concept', 'sport'], ['sport', 'basketball', 'baseball', 'soccer', 'football', 'hockey', 'tennis', 'running']);
+addNamedEntitiesTexts(['concept', 'sex'], ['sex']);
+addNamedEntitiesTexts(['object', 'game'], 'dylan ball');
+
+addNamedEntitiesTexts(['noun'], words.nouns, false);
+
+// People
+console.log('Add people');
+addNamedEntitiesTexts(['person'], ['you', 'me', 'he', 'she', 'it', 'us', 'we', 'y\'all', 'them', 'they']);
+addNamedEntitiesTexts(['person', 'name'], names.names, false);
+
+// Special nouns
+console.log('Special nouns');
+let specNouns = ['bagger', 'bagga', 'legga', 'legger', 'gruh', 'gruhlly', 'brian', 'jeremy', 'the fucking sex king', 'super grover'];
+for (let i = 0; i < specNouns.length; i++) {
+	manager.addNamedEntityText(
+		'positive.noun',
+		specNouns[i],
+		['en'],
+		[specNouns[i]],
+	);
+}
+
+// Train and save the model.
+(async() => {
+	console.log('Train');
+	await manager.train();
+	console.log('Save');
+	// save for dev
+	manager.save('./data/jeremy.nlp');
+	// save for dist
+	const data = manager.export(true);
+	fs.writeFileSync('./public/data/jeremy.json', data);
+
+	// Log time
+	let endTime = new Date();
+	let timeDiff = endTime - startTime; //in ms
+	// strip the ms
+	timeDiff /= 1000;
+	// get minutes
+	timeDiff /= 60;
+
+	let minutes = Math.round(timeDiff);
+	console.log(`Elapsed: ${minutes} minutes`);
+})();

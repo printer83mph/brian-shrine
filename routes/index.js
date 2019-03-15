@@ -28,6 +28,13 @@ router.get('/chat', function (req, res, next) {
   });
 });
 
+/* GET jeremy */
+router.get('/jeremychat', function (req, res, next) {
+	res.render('jeremy', {
+		title: 'Jerem Chat'
+	})
+});
+
 io.on('connection', function (socket) {
   users[socket.id] = "anon";
   socket.on('name', function (nm) {

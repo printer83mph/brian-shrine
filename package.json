@@ -1,21 +1,33 @@
 {
   "name": "brian-shrine",
-  "version": "0.0.0",
+  "version": "2.0.4",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "webpack && node ./bin/www",
+    "train": "node ./bin/train",
+    "testJeremy": "node ./bin/test_jeremy",
+    "build": "webpack"
   },
   "dependencies": {
+    "acorn": "^6.1.1",
+    "ajv": "^6.10.0",
+    "ajv-keywords": "^3.4.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
+    "dts-bundle": "^0.7.3",
     "ejs": "~2.5.7",
     "express": "~4.16.0",
     "http-errors": "~1.6.2",
     "imgur": "^0.3.1",
     "morgan": "~1.9.0",
-    "socket.io": "^2.2.0"
+    "node-nlp": "^2.5.1",
+    "socket.io": "^2.2.0",
+    "thesaurus-com": "^1.2.1",
+    "typescript": "^3.3.3333"
   },
   "devDependencies": {
-    "nodemon": "^1.18.9"
+    "nodemon": "^1.18.9",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3"
   }
 }
