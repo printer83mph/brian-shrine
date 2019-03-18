@@ -1,0 +1,14 @@
+var fs = require('fs');
+
+fs.readFile('./node_modules/node-nlp/lib/sentiment/sentiment-analyzer.js', 'utf8', function (err,data) {
+	if (err) {
+		return console.log(err);
+	}
+	var result = data
+		.replace(/this.vocabulary = undefined;/g, 'this.vocabulary = require(\'./languages/en/senticon_en.json\');')
+		.replace(/this.negations = \[\];/g, 'this.negations = require(\'./languages/en/negations_en.json\').words;');
+
+	fs.writeFile('./node_modules/node-nlp/lib/sentiment/sentiment-analyzer.js', result, 'utf8', function (err) {
+		if (err) return console.log(err);
+	});
+});

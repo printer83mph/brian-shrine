@@ -3,10 +3,11 @@
   "version": "2.0.4",
   "private": true,
   "scripts": {
-    "start": "webpack && node ./bin/www",
+    "start": "node ./bin/edit_nlp && webpack && node ./bin/www",
     "train": "node ./bin/train",
     "testJeremy": "node ./bin/test_jeremy",
-    "build": "webpack"
+    "build": "webpack",
+    "reload": "rm -rf ./node_modules && npm install"
   },
   "dependencies": {
     "acorn": "^6.1.1",

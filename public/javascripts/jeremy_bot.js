@@ -4,7 +4,7 @@ const model = require('../data/jeremy.json');
 class JeremyBot {
 
 	static goodbye() {
-		window.open('','_self').close();
+		window.location.replace('https://www.wikifeet.com/Michelle_Obama');
 	}
 
 	constructor(name) {
@@ -21,16 +21,19 @@ class JeremyBot {
 		
 		// Put name in context
 		this.send(`My name is ${name}`);
+
+		// Dev?
+		this.dev = true;
 	}
 
 	send(msg) {
 		// Algorithm to get response and update mood
 		// not yet built
-		// Dev: console.log(typeof msg);
+		if (this.dev) console.log(typeof msg);
 
 		this.manager.process('en', msg, this.context)
 			.then(result => {
-				// Dev: console.log(result);
+				if (this.dev) console.log(result);
 				let message = result.answer;
 
 				this.sentiment
@@ -49,8 +52,8 @@ class JeremyBot {
 	updateMood(sentiment) {
 		this.moodNum += (sentiment.score * (1 - this.moodNum));
 
-		// Dev: console.log(sentiment);
-		// Dev: console.log(this.moodNum);
+		if (this.dev) console.log(sentiment);
+		if (this.dev) console.log(this.moodNum);
 		let mood = this.moods[Math.round(this.moodNum * (this.moods.length - 1))];
 
 		this.display.src = `/images/jeremy/${mood}.png`
