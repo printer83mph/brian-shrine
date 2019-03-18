@@ -23,7 +23,7 @@ class JeremyBot {
 		this.send(`My name is ${name}`);
 
 		// Dev?
-		this.dev = true;
+		this.dev = false;
 	}
 
 	send(msg) {
