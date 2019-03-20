@@ -51,6 +51,9 @@ class JeremyBot {
 
 	updateMood(sentiment) {
 		this.moodNum += (sentiment.score * (1 - this.moodNum));
+		// Cap moodNum in case calculation fails
+		this.moodNum = (this.moodNum > 1) ? 1 : this.moodNum;
+		this.moodNum = (this.moodNum < 0) ? 0 : this.moodNum;
 
 		if (this.dev) console.log(sentiment);
 		if (this.dev) console.log(this.moodNum);
